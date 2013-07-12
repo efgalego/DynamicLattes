@@ -1,0 +1,148 @@
+@prefix lattes: http://www.semanticlattes.com.br/curriculo#
+@prefix onto: http://www.ime.usp.br/ontolattes#
+@prefix qualis: http://qualis.capes.gov.br/qualis-capes.owl#
+[rule1:
+	(?p1 lattes:ISSN ?issn)
+	(?p2 qualis:ISSN ?issn)
+	->
+	(?p1 owl:sameAs ?p2)]
+
+[regraIsGraduado:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv onto:temDadosGerais ?dadosgerais)
+	(?dadosgerais onto:temFormacaoAcademicaTitulacao ?titulo)
+	(?titulo onto:anoDeConclusao ?anoConclusao)
+	(?titulo onto:nivel ?nivel)
+	regex(?nivel, "^(G|g)radua(çã|ca)o.*")
+	regex(?anoConclusao, ".+")
+	->
+	(?pessoa lattes:temTitulo lattes:TituloGraduado)]
+
+[regraIsMestre:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv onto:temDadosGerais ?dadosgerais)
+	(?dadosgerais onto:temFormacaoAcademicaTitulacao ?titulo)
+	(?titulo onto:anoDeConclusao ?anoConclusao)
+	(?titulo onto:nivel ?nivel)
+	regex(?nivel, "^(M|m)estrado.*")
+	regex(?anoConclusao, ".+")
+	->
+	(?pessoa lattes:temTitulo lattes:TituloMestre)]
+
+[regraIsDoutor:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv onto:temDadosGerais ?dadosgerais)
+	(?dadosgerais onto:temFormacaoAcademicaTitulacao ?titulo)
+	(?titulo onto:anoDeConclusao ?anoConclusao)
+	(?titulo onto:nivel ?nivel)
+	regex(?nivel, "^(D|d)outor(ado?).*")
+	regex(?anoConclusao, ".+")
+	->
+	(?pessoa lattes:temTitulo lattes:TituloDoutor)]
+
+[regraPessoa:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv onto:temDadosGerais ?dados)
+	->
+	[regraPessoaNome: 
+		(?pessoa lattes:nome ?pessoa_nome) <- (?dados onto:nomeCompleto ?pessoa_nome)]
+	[regraPessoaCitacao: 
+		(?pessoa lattes:nomeParaCitacao ?nomeParaCitacao) <- (?dados onto:nomeEmCitacoesBibliograficas ?nomeParaCitacao)] ]
+
+[regraArtigo:
+	(?artPublicado rdf:type onto:ArtigosPublicados)
+	(?artPublicado onto:temDadosBasicos ?dados)
+	(?artPublicado onto:temDetalhamentoDoArtigo ?detalhes)
+	(?artPublicado onto:estaRelacionadoCom ?artigo)
+	(?artigo rdf:type lattes:ArtigoPeriodico)
+	(?artigo lattes:ehPublicadoEmEdicaoPeriodico ?edicao)
+	(?edicao lattes:ehEdicaoDoPeriodico ?periodico)
+	->
+	[regraArtigoTitulo:
+		(?artigo lattes:titulo ?titulo) <- (?detalhes onto:tituloDoLivro ?titulo)]
+	[regraArtigoPaginaInicial:
+		(?artigo lattes:paginaInicial ?pagIni) <- (?detalhes onto:paginaInicial ?pagIni)]
+	[regraArtigoPaginaFinal:
+		(?artigo lattes:paginaFinal ?pagFin) <- (?detalhes onto:paginaFinal ?pagFin)]
+	[regraArtigoAno:
+		(?artigo lattes:ano ?ano) <- (?dados onto:ano ?ano)]
+	[regraArtigoEdicaoFasciculo:
+		(?edicao lattes:fasciculo ?fasciculo) <- (?detalhes onto:fasciculo ?fasciculo)]
+	[regraArtigoEdicaoVolume:
+		(?edicao lattes:volume ?volume) <- (?detalhes onto:volume ?volume)]
+	[regraArtigoPeriodicoTitulo:
+		(?periodico lattes:titulo ?tituloPeriodico) <- (?detalhes onto:tituloDoPeriodicoOuRevista ?tituloPeriodico)]]
+
+[regraArtigoPublicacao:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv onto:temProducaoBibliografica ?producao)
+	(?producao rdf:type onto:ArtigosPublicados)
+	(?producao onto:estaRelacionadoCom ?artigo)
+	(?artigo rdf:type lattes:ArtigoPeriodico)
+	->
+	(?pessoa lattes:publicou ?artigo)]
+
+
+[regraArtigoAutores:
+	(?cv rdf:type onto:CurriculoVitae)
+	(?cv onto:temDadosGerais ?dg)
+	(?dg rdf:type onto:DadosGerais)
+	(?dg onto:nomeEmCitacoesBibliograficas ?citacao)
+	(?producao onto:autor ?autor)
+	strConcat(?citacao, ?strCitacao)
+	strConcat('^', ?autor, ?strAutor)
+	regex(?strCitacao, ?strAutor, 'i')	
+	-> 
+	print('achou')
+	(?cv onto:temProducaoBibliografica ?producao)]
+
+[regraOrientacaoEmAndamento:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv rdf:type onto:CurriculoVitae)
+	(?cv onto:temDadosComplementares ?oam)
+	(?oam rdf:type ?classe)
+	(?classe rdfs:subClassOf onto:OrientacaoEmAndamento)
+	(?cv onto:temDadosGerais ?dados)
+        (?oam onto:temDadosBasicosDeOrientacoes ?dbo)
+        (?oam onto:temDetalhamento ?detalhes)
+	(?oam onto:estaRelacionadoCom ?orientacao)
+	(?orientacao lattes:temOrientado ?estudante)
+	(?orientacao lattes:temTrabalho ?trabalho)
+	->
+	(?pessoa lattes:possuiOrientacao ?orientacao)
+	(?orientacao lattes:statusOrientacao 'EM_ANDAMENTO')
+	[regraOrientacaoEmAndamentoEstudanteNome:
+		(?estudante lattes:nome ?nomeOrientando) <- (?detalhes onto:nomeDoOrientado ?nomeOrientando)]
+	[regraOrientacaoEmAndamentoTrabalhoTitulo:
+		(?trabalho lattes:titulo ?tituloTrabalho) <- (?dbo onto:tituloDoTrabalho ?tituloTrabalho)]
+	[regraOrientacaoEmAndamentoTrabalhoAno:
+		(?trabalho lattes:ano ?anoTrabalho) <- (?dbo onto:ano ?anoTrabalho)] ]
+
+[regraOrientacaoConcluida:
+	(?pessoa rdf:type lattes:Pessoa)
+	(?cv onto:estaRelacionadoCom ?pessoa)
+	(?cv rdf:type onto:CurriculoVitae)
+	(?cv onto:temDadosComplementares ?oam)
+	(?oc rdf:type ?classe)
+	(?classe rdfs:subClassOf onto:OrientacoesConcluidas)
+	(?cv onto:temDadosGerais ?dados)
+        (?oc onto:temDadosBasicosDeOrientacoes ?dbo)
+        (?oc onto:temDetalhamento ?detalhes)
+	(?oc onto:estaRelacionadoCom ?orientacao)
+	(?orientacao lattes:temOrientado ?estudante)
+	(?orientacao lattes:temTrabalho ?trabalho)
+	->
+	(?pessoa lattes:possuiOrientacao ?orientacao)
+	(?orientacao lattes:statusOrientacao 'FINALIZADO')
+	[regraOrientacaoConcluidaEstudanteNome:
+		(?estudante lattes:nome ?nomeOrientado) <- (?detalhes onto:nomeDoOrientado ?nomeOrientado)]
+	[regraOrientacaoConcluidaTrabalhoTitulo:
+		(?trabalho lattes:titulo ?tituloTrabalho) <- (?dbo onto:tituloDoTrabalho ?tituloTrabalho)]
+	[regraOrientacaoConcluidaTrabalhoAno:
+		(?trabalho lattes:ano ?anoTrabalho) <- (?dbo onto:ano ?anoTrabalho)] ]

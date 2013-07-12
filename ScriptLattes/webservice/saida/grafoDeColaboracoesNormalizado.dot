@@ -1,0 +1,8 @@
+strict digraph grafo3 {
+	graph [bb="0,0,136,82", id=grafo3, overlap=False];
+	node [label="\N", fontsize=8, shape=rectangle, style=filled];
+	0 [label="Flavio S. Correa da Silva [2]", URL="http://lattes.cnpq.br/8571722708574643", color="#003399", fontcolor="#FFFFFF", height="0.25", pos="68,73", width="1.8889"];
+	1 [label="Renata Wassermann [2]", URL="http://lattes.cnpq.br/8548608291351316", color="#003399", fontcolor="#FFFFFF", height="0.25", pos="68,9", width="1.6389"];
+	0 -> 1 [arrowhead=normal, arrowsize="0.75", fontsize=8, label="1.0", lp="58,41", penwidth="3.5", pos="e,59.696,18.131 60.265,63.643 56.694,58.718 52.843,52.386 51,46 48.898,38.718 51.539,31.045 55.319,24.587"];
+	1 -> 0 [arrowhead=normal, arrowsize="0.75", fontsize=8, label="1.0", lp="75,41", penwidth="3.5", pos="e,68,63.83 68,18.153 68,28.031 68,43.98 68,56.139"];
+}

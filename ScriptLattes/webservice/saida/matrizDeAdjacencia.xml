@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>             
+<!--  An excerpt of an egocentric social network  -->             
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">             
+<graph edgedefault="undirected">             
+<!-- data schema -->             
+<key id="name" for="node" attr.name="name" attr.type="string"/>             
+<key id="nickname" for="node" attr.name="nickname" attr.type="string"/>             
+<key id="gender" for="node" attr.name="gender" attr.type="string"/>             
+<key id="image" for="node" attr.name="image" attr.type="string"/>             
+<key id="link" for="node" attr.name="link" attr.type="string"/>             
+<key id="amount" for="edge" attr.name="amount" attr.type="int"/>             
+<key id="pubs" for="node" attr.name="pubs" attr.type="int"/>
+<!-- nodes -->                 
+<node id="0">                 
+<data key="name">Flavio Soares Correa da Silva</data>                 
+<data key="nickname">CORREA DA SILVA, F. S.;CORREA DA SILVA, FLÁVIO SOARES;CORRÊA DA SILVA, FLÁVIO SOARES;DA SILVA, FLAVIO</data>                 
+<data key="gender">M</data>                 
+<data key="image">http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4781644J4</data>                 
+<data key="link">http://lattes.cnpq.br/8571722708574643</data>                 
+<data key="pubs">2</data>                 
+</node>
+<!-- nodes -->                 
+<node id="1">                 
+<data key="name">Renata Wassermann</data>                 
+<data key="nickname">WASSERMANN, R.;Wassermann, R.;Wassermann, Renata</data>                 
+<data key="gender">M</data>                 
+<data key="image">http://servicosweb.cnpq.br/wspessoa/servletrecuperafoto?tipo=1&id=K4795401A3</data>                 
+<data key="link">http://lattes.cnpq.br/8548608291351316</data>                 
+<data key="pubs">2</data>                 
+</node>
+<!-- edges -->                         
+<edge source="0" target="1">                         
+<data key="amount">2.0</data>                         
+</edge>
+<!-- edges -->                         
+<edge source="1" target="0">                         
+<data key="amount">2.0</data>                         
+</edge>
+</graph>            
+</graphml>

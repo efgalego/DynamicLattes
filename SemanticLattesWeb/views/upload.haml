@@ -1,0 +1,7 @@
+%h3 Importar Currículo
+%form(action='/curriculo/upload' method='post' enctype='multipart/form-data')
+  %label(for='#curriculo') Currículo Lattes:
+  %br
+  %input(id='curriculo' type='file' name='curriculo')
+  %br
+  %input(type='submit' value='Enviar' id='enviar')

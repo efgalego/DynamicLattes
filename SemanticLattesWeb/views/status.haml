@@ -1,0 +1,14 @@
+%h3= report_title
+%table#kbstatus
+  %thead
+    %tr
+      %th.first{scope='col'} Entidade
+      %th{scope='col'} Quantidade
+  %tbody
+    - if report.empty?
+      %tr
+        %td.empty{:colspan => 2} Nenhuma informação foi carregada.
+    - report.keys.sort.each do |k|
+      %tr
+        %td= k
+        %td= report[k]

@@ -1,0 +1,7 @@
+- for result in results
+  %li
+    - pessoa = result['pessoa']
+    %h4= pessoa['nome']
+    %p Citação: #{h pessoa['citacao']}
+    - unless result['departamento'].nil?
+      %p Departamento: #{h result['departamento']['nome']}

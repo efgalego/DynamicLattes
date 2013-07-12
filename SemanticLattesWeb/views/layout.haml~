@@ -1,0 +1,82 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => 'pt-br', :lang => 'pt-br'}
+  %head
+    %meta{ 'http-equiv' => 'content-type', 'content' => 'text/html; charset=utf-8' }
+    %title Semantic Lattes
+    %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/stylesheets/style.css' }
+    %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/stylesheets/jquery.autocomplete.css' }
+    %script{:type => 'text/javascript', :src => 'javascripts/jquery.js'}
+    %script{:type => 'text/javascript', :src => 'javascripts/jquery.autocomplete.js'}
+    %script{:type => 'text/javascript', :src => 'javascripts/effects.js'}
+    :javascript
+      $(document).ready(function() {
+        flash('.global');
+        flash('.notice', 4000);
+        flash('.error', 4000);
+        flash('.success', 4000);
+        $('#q').autocomplete('/questions');
+      });
+  %body
+    - if flash.has_key?(:global)
+      %div.flash.global= flash[:global]
+    #container
+      #header
+        #auth
+          %ul
+            %li
+              %a.top(href='/restart') Reiniciar (dev-only)
+              |
+            %li
+              %a.top(href='/status/inference') Status (Inferência)
+              |
+            %li
+              %a.top(href='/status') Status
+              |
+            %li
+              %a.top(href='/curriculo') Adicionar Curriculo
+              |
+            %li
+              %a.top(href='/sobre') Sobre
+        %h1
+          %a(href='/') Semantic Lattes
+      #body
+        - if flash.has_key?(:error)
+          %p.flash.error= flash[:error]
+        - if flash.has_key?(:notice)
+          %p.flash.notice= flash[:notice]
+        %form{:method => 'get', :action => '/busca'}
+          %h3 Questão
+          %input{:type => 'text', :name =>'q', :id => 'q', :value => q}
+          %input(type='submit' value='Consultar' id='search')
+      #report
+        - if flash.has_key?(:success)
+          %p.flash.success= flash[:success]
+        - if defined?(results)
+          %h3 Resultados
+          %div
+            %p A consulta retornou #{h size} resultado(s).
+          %ul
+            = yield
+          -#.Pages
+          -#  .Paginator
+          -#    %span.AtStart &lt; Prev
+          -#    %span.break ...
+          -#    %span.this-page 1
+          -#    %a(href='/artigos/2') 2
+          -#    %a(href='/artigos/2') 3
+          -#    %a(href='/artigos/2') 4
+          -#    %span.break ...
+          -#    %a.Next(href='/artigos/2') Next &gt;
+          -#  .Results (6,460,719 uploads)
+        - else
+          = yield
+      #footer
+        %p 
+          %a(title='semanticlattes.com.br' class='smalllogo' href='/') SL
+        %ul
+          %li(class='legal') &copy; Semantic Lattes 2009
+          %li 
+            %a(href='/contact') Contato
+            |
+          %li 
+            %a(href='/help') Ajuda
